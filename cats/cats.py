@@ -1,6 +1,7 @@
 """Typing test implementation"""
 
 from operator import truediv
+from re import L
 from hamcrest import none
 from utils import lower, split, remove_punctuation, lines_from_file
 from ucb import main, interact, trace
@@ -105,6 +106,25 @@ def accuracy(typed, reference):
     typed_words = split(typed)
     reference_words = split(reference)
     # BEGIN PROBLEM 3
+    i=0
+    acc=0
+    if len(reference_words)>len(typed_words):
+        num=len(typed_words)
+    else:
+        num=len(reference_words)
+    total=len(typed_words)
+    while i<num:
+        if (reference_words[i]==typed_words[i]):
+            acc+=1
+        i+=1
+    if len(typed_words)==0 and len(reference_words)==0:
+        return 100.0
+    elif num==0:
+        return 0.0
+    else:
+        return (acc/total)*100.0
+
+          
     "*** YOUR CODE HERE ***"
     # END PROBLEM 3
 
@@ -124,6 +144,11 @@ def wpm(typed, elapsed):
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    num=len(typed)
+    num=num/5
+    elapsed=elapsed/60
+    return num/elapsed
+         
     # END PROBLEM 4
 
 
@@ -151,6 +176,21 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    def min_(word_list):
+        list=word_list[0]
+        for i in word_list:
+            if diff_function(typed_word,i,limit)<diff_function(typed_word,list,limit):
+                list=i
+        if diff_function(typed_word,list,limit)<=limit:
+            return list
+        else:
+            return typed_word
+    for i in word_list:
+        if i==typed_word:
+            return i
+    list=min_(word_list)
+    return list
+        
     # END PROBLEM 5
 
 
@@ -177,7 +217,17 @@ def sphinx_swaps(start, goal, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if limit<0:
+        return 0
+    if len(start)==0:
+        return len(goal)
+    if len(goal)==0:
+        return len(start)
+    if goal[0]==start[0]:
+        return 0+sphinx_swaps(start[1:], goal[1:], limit)
+    else:
+        return 1+sphinx_swaps(start[1:], goal[1:], limit-1)
+       
     # END PROBLEM 6
 
 
