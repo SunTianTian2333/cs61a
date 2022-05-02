@@ -1,3 +1,4 @@
+
 HW_SOURCE_FILE = __file__
 
 
@@ -23,7 +24,12 @@ def num_eights(pos):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    if pos==0:
+        return 0
+    if pos%10==8:
+        return 1+num_eights(pos//10)
+    else:
+        return 0+num_eights(pos//10)
 
 def pingpong(n):
     """Return the nth element of the ping-pong sequence.
@@ -59,6 +65,14 @@ def pingpong(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    def func(result,i,step):
+        if i==n:
+            return result
+        if num_eights(i) or i%8==0:
+            return func(result-step,i+1,-step)
+        else:
+            return func(result+step,i+1,step)
+    return func(1,1,1)
 
 
 def get_larger_coin(coin):
@@ -115,3 +129,16 @@ def count_coins(change):
     True
     """
     "*** YOUR CODE HERE ***"
+    def func (change,coin):
+        if change==0:
+            return 1
+        if change<0:
+            return 0
+        if coin==None:
+            return 0
+        with_coin=func(change-coin,coin)
+        without_coin=func(change,get_larger_coin(coin))
+        return with_coin+without_coin
+    return func(change,1)
+
+     
